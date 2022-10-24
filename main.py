@@ -1,6 +1,6 @@
 from typing import List, Optional
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 from models.country_model import CountryCreate, CountryRead, Country
 
@@ -33,11 +33,20 @@ def create_country(country: CountryCreate):
         return db_country
 
 
-@app.get('/countries', response_model=List[CountryRead])
+@app.get('/countries/', response_model=List[CountryRead])
 def read_countries():
     with Session(engine) as session:
         countries = session.exec(select(Country)).all()
         return countries
+
+
+@app.get('/countries/{country_id}', response_model=CountryRead)
+def read_country(country_id: int):
+    with Session(engine) as session:
+        country = session.get(Country, country_id)
+        if not country:
+            raise HTTPException(status_code=404, detail='Country not found')
+        return country
 
 
 if __name__ == "__main__":
