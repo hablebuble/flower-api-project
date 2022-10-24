@@ -18,3 +18,9 @@ class CountryCreate(CountryBase):
 
 class CountryRead(CountryBase):
     id: int
+
+
+class CountryUpdate(SQLModel):
+    name_english: Optional[str] = None
+    name_russian: Optional[str] = None
+    country_count: Optional[str] = None
