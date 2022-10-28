@@ -9,6 +9,19 @@ class CountryProductGroupLink(SQLModel, table=True):
     productGroup_id: Optional[int] = Field(
         default=None, foreign_key="productgroup.id", primary_key=True)
 
+class CountryGroupBuyerLink(SQLModel, table=True):
+    country_id: Optional[int] = Field(
+        default=None, foreign_key="country.id", primary_key=True
+    )
+    productGroup_id: Optional[int] = Field(
+        default=None, foreign_key="productgroup.id", primary_key=True)
+
+    buyer_id: Optional[int] = Field(
+        default=None, foreign_key="buyer.id", primary_key=True)
+
+
+
+
 
 class CountryBase(SQLModel):
     name_english: str = Field(index=True)
@@ -38,25 +51,5 @@ class CountryUpdate(SQLModel):
     country_code: Optional[str] = None
 
 
-
-class ProductGroupBase(SQLModel):
-    name: str = Field(index=True)
-    code: str = Field(index=True, unique=True)
-
-class ProductGroup(ProductGroupBase, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-
-
-class ProductGroupCreate(ProductGroupBase):
-    pass
-
-
-class ProductGroupRead(ProductGroupBase):
-    id: int
-
-
-class ProductGroupUpdate(SQLModel):
-    name: Optional[str] = None
-    code: Optional[str] = None
 
 
