@@ -56,24 +56,24 @@ app = FastAPI()
 def on_startup():
     create_db_and_tables()
 
-
-@app.post('/country-product-link')
-def create_link(group: str = Query(find_group()[1], enum=find_group()),
-                country: str = Query(find_country()[1], enum=find_country()),
-                session: Session = Depends(get_session)):
-    q_country = select(Country.id).where(Country.name_russian == country)
-    db_country = session.exec(q_country).first()
-    q_group = select(ProductGroup.id).where(ProductGroup.name == group)
-    db_group = session.exec(q_group).first()
-    db_link = CountryProductGroupLink(country_id=db_country, productGroup_id=db_group)
-    try:
-        session.add(db_link)
-        session.commit()
-        session.refresh(db_link)
-    except IntegrityError:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Такое сопоставление уже существует в базе")
-    return db_link
-
+#
+# @app.post('/country-product-link')
+# def create_link(group: str = Query(find_group()[1], enum=find_group()),
+#                 country: str = Query(find_country()[1], enum=find_country()),
+#                 session: Session = Depends(get_session)):
+#     q_country = select(Country.id).where(Country.name_russian == country)
+#     db_country = session.exec(q_country).first()
+#     q_group = select(ProductGroup.id).where(ProductGroup.name == group)
+#     db_group = session.exec(q_group).first()
+#     db_link = CountryProductGroupLink(country_id=db_country, productGroup_id=db_group)
+#     try:
+#         session.add(db_link)
+#         session.commit()
+#         session.refresh(db_link)
+#     except IntegrityError:
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Такое сопоставление уже существует в базе")
+#     return db_link
+#
 
 
 @app.get('/who-buying')
@@ -81,26 +81,26 @@ def who_buying(group:str, session: Session = Depends(get_session)):
     q_group = select(ProductGroup.id).where(ProductGroup.name.lower() == group.lower())
 
 
-@app.post('/country-product-buyer-link')
-def create_link(group: str = Query(find_group()[0], enum=find_group()),
-                country: str = Query(find_country()[0], enum=find_country()),
-                buyer: str = Query(find_buyer()[0], enum=find_buyer()),
-                session: Session = Depends(get_session)):
-    q_country = select(Country.id).where(Country.name_russian == country)
-    db_country = session.exec(q_country).first()
-    q_group = select(ProductGroup.id).where(ProductGroup.name == group)
-    db_group = session.exec(q_group).first()
-    q_buyer = select(Buyer.id).where(Buyer.surname == buyer)
-    db_buyer = session.exec(q_buyer).first()
-    db_link = CountryGroupBuyerLink(country_id=db_country, productGroup_id=db_group, buyer_id=db_buyer)
-    try:
-        session.add(db_link)
-        session.commit()
-        session.refresh(db_link)
-    except IntegrityError:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Такое сопоставление уже существует в базе")
-    return db_link
-
+# @app.post('/country-product-buyer-link')
+# def create_link(group: str = Query(find_group()[0], enum=find_group()),
+#                 country: str = Query(find_country()[0], enum=find_country()),
+#                 buyer: str = Query(find_buyer()[0], enum=find_buyer()),
+#                 session: Session = Depends(get_session)):
+#     q_country = select(Country.id).where(Country.name_russian == country)
+#     db_country = session.exec(q_country).first()
+#     q_group = select(ProductGroup.id).where(ProductGroup.name == group)
+#     db_group = session.exec(q_group).first()
+#     q_buyer = select(Buyer.id).where(Buyer.surname == buyer)
+#     db_buyer = session.exec(q_buyer).first()
+#     db_link = CountryGroupBuyerLink(country_id=db_country, productGroup_id=db_group, buyer_id=db_buyer)
+#     try:
+#         session.add(db_link)
+#         session.commit()
+#         session.refresh(db_link)
+#     except IntegrityError:
+#         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Такое сопоставление уже существует в базе")
+#     return db_link
+#
 
 @app.post('/upload-product-groups-csv')
 def upload_csv(csvfile: UploadFile = File(...), session: Session = Depends(get_session)):

@@ -52,7 +52,7 @@ def insert_product_groups_from_file(db, df):
 #         continue
 
 
-## Залить страны из файла
+# Залить страны из файла
 def insert_countries_from_file(db, df):
     for i in df:
         print(i)
